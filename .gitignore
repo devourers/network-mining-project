@@ -3,3 +3,4 @@
 *.friends
 /__pycache__/*
 *.ids
+*.png

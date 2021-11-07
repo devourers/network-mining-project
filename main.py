@@ -1,8 +1,6 @@
 import vk
-import json
 import networkx as nx
 import matplotlib.pyplot as plt
-import tqdm
 import friends
 import form_mutual_graph
 
@@ -21,9 +19,31 @@ for edge in G.edges():
     if edge[0] in hidden_friends or edge[1] in hidden_friends:
         edge_list.append(edge)
 pos1 = nx.kamada_kawai_layout(G)
+
 spec_node_size = [d[user1_id] * 3, d[user2_id] * 3]
 nx.draw_networkx_nodes(G, pos1, node_size=[v * 3 for v in d.values()], node_color="tab:blue")
-nx.draw_networkx_nodes(G, pos1, nodelist=[user1_id, user2_id], node_size=spec_node_size,  node_color ="tab:red")
+nx.draw_networkx_nodes(G, pos1, nodelist=[user1_id, user2_id], node_size=spec_node_size,  node_color ="green")
 nx.draw_networkx_edges(G, pos1)
 nx.draw_networkx_edges(G, pos1, edgelist=edge_list, edge_color='tab:red')
-plt.show()
+plt.savefig("with_hidden.png", format = "PNG")
+plt.close()
+#second graph -- with hidden friends
+
+G_hidden = nx.Graph()
+for node in G.nodes():
+    if node not in hidden_friends or (node in [user1_id, user2_id]):
+        G_hidden.add_node(node)
+for edge in G.edges():
+    if edge[0] in G_hidden.nodes() and edge[1] in G_hidden.nodes():
+        G_hidden.add_edge(edge[0], edge[1])
+
+
+
+d = dict(G_hidden.degree)
+pos1 = nx.kamada_kawai_layout(G_hidden)
+spec_node_size = [d[user1_id] * 3, d[user2_id] * 3]
+nx.draw_networkx_nodes(G_hidden, pos1, node_size=[v * 3 for v in d.values()], node_color="tab:blue")
+nx.draw_networkx_nodes(G_hidden, pos1, nodelist=[user1_id, user2_id], node_size=spec_node_size,  node_color ="green")
+nx.draw_networkx_edges(G_hidden, pos1)
+plt.savefig("without_hidden.png", format = "PNG")
+plt.close()

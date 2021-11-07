@@ -1,5 +1,4 @@
 import vk
-import json
 import networkx as nx
 import matplotlib.pyplot as plt
 import tqdm
@@ -52,7 +51,7 @@ def form_graph(user1_id, friends_file):
     log_num = 0
     for user in tqdm.tqdm(friends_1st_account):
         try:
-            curr_friends = form_sample(10, dict(vk_api.friends.get(v=version, user_id=user))['items'])
+            curr_friends = form_sample(0, dict(vk_api.friends.get(v=version, user_id=user))['items'])
             for friend in curr_friends:
                 if friend not in G.nodes():
                     G.add_node(friend)
