@@ -41,7 +41,7 @@ def form_graph(user1_id, friends_file):
                 friends_1st_account.append(int(line.strip()))
                 hidden_friends.append(int(line.strip()))
     except:
-        print("No file" + fr_fl + "was found, assuming user1 has no hidden friends.")
+        print("No file" + fr_fl + "was found, assuming user has no hidden friends.")
 
     for i in range(len(friends_1st_account)):
         G.add_node(friends_1st_account[i])
@@ -51,7 +51,7 @@ def form_graph(user1_id, friends_file):
     log_num = 0
     for user in tqdm.tqdm(friends_1st_account):
         try:
-            curr_friends = form_sample(0, dict(vk_api.friends.get(v=version, user_id=user))['items'])
+            curr_friends = form_sample(5, dict(vk_api.friends.get(v=version, user_id=user))['items'])
             for friend in curr_friends:
                 if friend not in G.nodes():
                     G.add_node(friend)
