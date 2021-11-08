@@ -1,7 +1,7 @@
 #token and hidden friends
 *.auth
 *.friends
-/__pycache__/*
+/__pycache__/
 *.ids
 *.png
 /.vscode/

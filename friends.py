@@ -17,19 +17,12 @@ def form_sample(size, init_sample):
         return res
 
 
-def form_graph(user1_id, friends_file):
-    try:
-        with open("access_token.auth", "r") as f:
-            token = f.readline().strip()
-    except:
-        print("No file 'access_token.auth', cannot login")
+def form_graph(user1_id, friends_file, vk_api):
     fr_fl = 'user'
     fr_fl += str(friends_file)
     fr_fl += '.friends'
     hidden_friends = []
     version = "5.81"
-    vk_session = vk.Session(access_token=token)
-    vk_api = vk.API(vk_session)
     G = nx.Graph()
     friends_request = vk_api.friends.get(v=version, user_id=user1_id)
     friends_1st_account = dict(friends_request)['items']
@@ -51,7 +44,7 @@ def form_graph(user1_id, friends_file):
     log_num = 0
     for user in tqdm.tqdm(friends_1st_account):
         try:
-            curr_friends = form_sample(5, dict(vk_api.friends.get(v=version, user_id=user))['items'])
+            curr_friends = form_sample(10, dict(vk_api.friends.get(v=version, user_id=user))['items'])
             for friend in curr_friends:
                 if friend not in G.nodes():
                     G.add_node(friend)
