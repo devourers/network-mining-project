@@ -5,8 +5,9 @@ import friends
 import form_mutual_graph
 import connection
 
-#redo -- draw two same graphs for better view
-plt.tight_layout()
+#redo -- draw two same graphs for better view DONE
+#redo -- hidden nodes -- check if it's hidden only on one account, hidden node should be hidden from everywhere
+plt.figure(figsize=(32, 18), dpi=60)
 with open('users.ids', 'r') as f:
     lines = f.readlines()
     user1_id = int(lines[0].strip())
@@ -42,9 +43,9 @@ for edge in G.edges():
 pos1 = nx.kamada_kawai_layout(G)
 other_edges = [edge for edge in G.edges() if edge not in edge_list]
 other_nodes = [node for node in G.nodes() if node not in hidden_friends]
-spec_node_size = [d[user1_id] * 3, d[user2_id] * 3]
-hidden_node_sizes = [3*d[v] for v in hidden_friends]
-normal_node_sizes = [3*d[v] for v in other_nodes]
+spec_node_size = [d[user1_id] * 10, d[user2_id] * 10]
+hidden_node_sizes = [5*d[v] for v in hidden_friends]
+normal_node_sizes = [5*d[v] for v in other_nodes]
 nx.draw_networkx_nodes(G, pos1, nodelist=other_nodes, node_size=normal_node_sizes, node_color="tab:blue")
 nx.draw_networkx_nodes(G, pos1, nodelist=[user1_id, user2_id], node_size=spec_node_size,  node_color ="green")
 nx.draw_networkx_edges(G, pos1, edgelist=other_edges)
