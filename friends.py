@@ -69,3 +69,25 @@ def form_graph(user1_id, friends_file, vk_api, sample_size):
     print("Finished generating friend graph. Across " + str(len(friends_1st_account)) +" accounts following " + str(log_num) +" were private")
     print(log)
     return G, hidden_friends, hidden_fof
+
+
+def form_graph_sample(user1_id, vk_api, friends_sample_size, FoF_sample_size):
+    G = nx.Graph()
+    friends_request = vk_api.friends.get(v=version, user_id=user1_id)
+    friends_sample_account = form_sample(friends_sample_size, dict(friends_request)['items'])
+    G.add_node(user1_id)
+    for i in range(len(friends_sample_account)):
+        G.add_node(friends_sample_account[i])
+        G.add_edge(user1_id, friends_sample_account[i])
+    for user in friends_sample_account:
+        try:
+            curr_friends = form_sample(sample_size, dict(vk_api.friends.get(v=version, user_id=user))['items'])
+            for friend in curr_friends:
+                if friend not in G.nodes():
+                    G.add_node(friend)
+                    if user in hidden_friends:
+                        hidden_fof.append(friend)
+                G.add_edge(user, friend)
+        except:
+            continue
+    return G

@@ -57,3 +57,32 @@ def visualise_clustering(G, graph_name, graph, pos1, user1_id, user2_id, wo_hid=
         name = graph_name + "/with_hidden_"+ graph_name + "_lambda_without_hidden.png"
     plt.savefig(name, format = "PNG")
     plt.close()
+
+
+def visualize_largest_cliques(G, wo_hid=False):
+    colors, widths = largest_cliques(G)
+    plt.figure(figsize=(8*2, 8))
+    for i in range(colors.shape[0]):
+        b_edges = np.array(list(G.edges))[widths[i] == widths[i].max()]
+        plt.subplot(1, 2, i+1)
+        nodes = nx.draw_networkx_nodes(
+            G, 
+            pos,
+            node_color=colors[i], 
+            node_size=100, 
+            linewidths=1, 
+            edgecolors='black'
+        )
+        nx.draw_networkx_edges(
+            G,
+            pos,
+            alpha=0.3,
+            width=widths[i].min()
+        )
+        nx.draw_networkx_edges(
+            G,
+            pos,
+            width=widths[i].max(),
+            edgelist=b_edges
+        )
+        plt.title('Clique of the size {}'.format(size))

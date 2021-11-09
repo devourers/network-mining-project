@@ -3,6 +3,7 @@ import vk
 import tqdm
 import numpy as np
 
+
 def construct_two_graphs(G, edge_list, node_list):
     with_hidden = G
     without_hidden = nx.Graph()
@@ -23,6 +24,7 @@ def construct_two_graphs(G, edge_list, node_list):
     print("With hidden connected: ", nx.is_connected(with_hidden))
     print("Without hidden connected: ", nx.is_connected(G0))
     return with_hidden, G0
+
 
 def get_main_info(G, graph_name, wo_hid=False):
     Gcc = sorted(nx.connected_components(G), key=len, reverse=True)
@@ -65,6 +67,7 @@ def eig_laplacian(G):
         res.append(row.tolist()[0])
     return np.array(res), v
 
+
 def spectral_two_clusters(vecs):
     sec_vec  = vecs[:, 1]
     res = []
@@ -75,10 +78,30 @@ def spectral_two_clusters(vecs):
             res.append(1)
     return res
 
+
 def lambda_clusterization(G):
     vecs, vals = eig_laplacian(G)
     clustering = spectral_two_clusters(vecs)
     return clustering
 
-def full_analysis(G):
-    return 0
+
+def largest_cliques(G):
+    cmap = plt.cm.rainbow
+    cliques = [i for i in nx.find_cliques(G)]
+    print(cliques)
+    max_size = len(max(cliques, key=len))
+    colors = []
+    widths = []
+    i = 0
+    for c in cliques:
+        if len(c) == max_size:
+            c_colors = []
+            for node in G.nodes:
+                c_colors.append(cmap(i*0.5)[:3] if node in c else (1, 1, 1))
+            i += 1
+            colors.append(c_colors)
+            c_width = []
+            for e in G.edges:
+                c_width.append(1.01 if set(e).issubset(c) else 1)
+            widths.append(c_width)
+    return np.array(colors), np.array(widths)
