@@ -1,6 +1,9 @@
 import networkx as nx
 import vk
 import tqdm
+import connection
+import friends
+
 
 version = "5.81"
 
@@ -35,3 +38,36 @@ def finish_graph(G, vk_api):
     print(log)
     print('Mutuality added')
     return G
+
+def construct_graph(user1_id, user2_id, sample_size):
+
+    vk_api = connection.connect()
+
+    user1_G, hid_1, hid_fof_1 = friends.form_graph(user1_id, 1, vk_api, sample_size)
+    user2_G, hid_2, hid_fof_2 = friends.form_graph(user2_id, 2, vk_api, sample_size)
+
+    G = merge_graphs(user1_G, user2_G)
+    G = finish_graph(G, vk_api)
+    both_hidden = []
+    for v in hid_1:
+        if v in hid_2:
+            both_hidden.append(v)
+    hidden_friends = list(set(hid_fof_1+hid_fof_2 + both_hidden))
+
+    try:
+        hidden_friends.remove(user1_id)
+    except:
+        pass
+
+    try:
+        hidden_friends.remove(user2_id)
+    except:
+        pass
+
+    edge_list = []
+    for edge in G.edges():
+        if edge[0] in hidden_friends or edge[1] in hidden_friends:
+            edge_list.append(edge)
+
+    return G, hidden_friends, edge_list
+

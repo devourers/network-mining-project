@@ -17,11 +17,13 @@ def form_sample(size, init_sample):
         return res
 
 
-def form_graph(user1_id, friends_file, vk_api):
+def form_graph(user1_id, friends_file, vk_api, sample_size):
+    #with FoFoF?
     fr_fl = 'user'
     fr_fl += str(friends_file)
     fr_fl += '.friends'
     hidden_friends = []
+    hidden_fof = []
     version = "5.81"
     G = nx.Graph()
     friends_request = vk_api.friends.get(v=version, user_id=user1_id)
@@ -44,12 +46,13 @@ def form_graph(user1_id, friends_file, vk_api):
     log_num = 0
     for user in tqdm.tqdm(friends_1st_account):
         try:
-            curr_friends = form_sample(5, dict(vk_api.friends.get(v=version, user_id=user))['items'])
+            curr_friends = form_sample(sample_size, dict(vk_api.friends.get(v=version, user_id=user))['items'])
             for friend in curr_friends:
                 if friend not in G.nodes():
                     G.add_node(friend)
                     if user in hidden_friends:
-                        hidden_friends.append(friend)
+                        hidden_fof.append(friend)
+                        #hidden_friends.append(friend)
                 G.add_edge(user, friend)
         except:
             log += "Private data on user " + str(user) + "\n"
@@ -63,4 +66,4 @@ def form_graph(user1_id, friends_file, vk_api):
     nx.set_node_attributes(G, labels, "label")
     print("Finished generating friend graph. Across " + str(len(friends_1st_account)) +" accounts following " + str(log_num) +" were private")
     print(log)
-    return G, hidden_friends
+    return G, hidden_friends, hidden_fof
