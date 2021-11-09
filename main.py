@@ -14,6 +14,7 @@ def main():
 
     G, hidden_friends, edge_list = form_mutual_graph.construct_graph(user1_id, user2_id, 5)
     visualistaion.draw_both_graphs(G, hidden_friends, edge_list, user1_id, user2_id)
+    analyze.get_main_info(G, "test")
 
 if __name__ == '__main__':
     main()

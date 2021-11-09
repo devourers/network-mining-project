@@ -41,6 +41,9 @@ def form_graph(user1_id, friends_file, vk_api, sample_size):
     for i in range(len(friends_1st_account)):
         G.add_node(friends_1st_account[i])
         G.add_edge(user1_id, friends_1st_account[i])
+    for i in range(len(hidden_friends)):
+        G.add_node(hidden_friends[i])
+        G.add_edge(user1_id, hidden_friends[i])
 
     log = ""
     log_num = 0
@@ -52,7 +55,6 @@ def form_graph(user1_id, friends_file, vk_api, sample_size):
                     G.add_node(friend)
                     if user in hidden_friends:
                         hidden_fof.append(friend)
-                        #hidden_friends.append(friend)
                 G.add_edge(user, friend)
         except:
             log += "Private data on user " + str(user) + "\n"

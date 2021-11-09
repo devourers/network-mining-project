@@ -66,8 +66,11 @@ def construct_graph(user1_id, user2_id, sample_size):
 
     edge_list = []
     for edge in G.edges():
-        if edge[0] in hidden_friends or edge[1] in hidden_friends:
+        if (edge[0] in hid_1 or edge[1] in hid_1) and edge not in user2_G.edges(): 
             edge_list.append(edge)
-
+        elif (edge[0] in hid_2 or edge[1] in hid_2) and edge not in user1_G.edges():
+            edge_list.append(edge)
+        elif edge[0] in hidden_friends or edge[1] in hidden_friends:
+            edge_list.append(edge)
     return G, hidden_friends, edge_list
 
