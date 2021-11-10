@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import analyze
+import numpy as np
 
 def form_kawada_kawai(G):
     print("Forming kamada-kawai layout...")
@@ -86,3 +87,15 @@ def visualize_largest_cliques(G, wo_hid=False):
             edgelist=b_edges
         )
         plt.title('Clique of the size {}'.format(size))
+
+
+def visualise_netstalking_coeficients(res, coefs):
+    plt.figure(figsize=(8*2, 8))
+    i = 0
+    for r in res:
+        plots = np.array(r)
+        plt.scatter(plots[0], plots[1])
+        plt.annotate(str(coefs[i]), (plots[0], plots[1]))
+        i += 1
+    plt.show()
+    

@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 import tqdm
 import random
 
-def form_sample(size, init_sample):
+version = "5.81"
+
+def form_sample(size, init_sample, G=None):
     res = []
     n = len(init_sample)
     if size > n:
@@ -12,19 +14,23 @@ def form_sample(size, init_sample):
     else:
         for i in range(size):
             elem = random.choice(init_sample)
-            if elem not in res:
-                res.append(elem)
+            if G != None:
+                if elem in G:
+                    pass
+                elif elem not in res:
+                    res.append(elem)
+            else:
+                if elem not in res:
+                    res.append(elem)
         return res
 
 
 def form_graph(user1_id, friends_file, vk_api, sample_size):
-    #with FoFoF?
     fr_fl = 'user'
     fr_fl += str(friends_file)
     fr_fl += '.friends'
     hidden_friends = []
     hidden_fof = []
-    version = "5.81"
     G = nx.Graph()
     friends_request = vk_api.friends.get(v=version, user_id=user1_id)
     friends_1st_account = dict(friends_request)['items']
@@ -71,9 +77,9 @@ def form_graph(user1_id, friends_file, vk_api, sample_size):
     return G, hidden_friends, hidden_fof
 
 
-def form_graph_sample(user1_id, vk_api, friends_sample_size, FoF_sample_size):
+#download all friends one time?
+def form_graph_sample(user1_id, vk_api, friends_sample_size, FoF_sample_size, friends_request):
     G = nx.Graph()
-    friends_request = vk_api.friends.get(v=version, user_id=user1_id)
     friends_sample_account = form_sample(friends_sample_size, dict(friends_request)['items'])
     G.add_node(user1_id)
     for i in range(len(friends_sample_account)):
@@ -81,7 +87,7 @@ def form_graph_sample(user1_id, vk_api, friends_sample_size, FoF_sample_size):
         G.add_edge(user1_id, friends_sample_account[i])
     for user in friends_sample_account:
         try:
-            curr_friends = form_sample(sample_size, dict(vk_api.friends.get(v=version, user_id=user))['items'])
+            curr_friends = form_sample(sample_size, dict(vk_api.friends.get(v=version, user_id=user))['items'], G)
             for friend in curr_friends:
                 if friend not in G.nodes():
                     G.add_node(friend)

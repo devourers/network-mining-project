@@ -6,3 +6,4 @@
 *.png
 /.vscode/
 *.txt
+!requiremnets.txt
