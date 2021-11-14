@@ -7,3 +7,4 @@
 /.vscode/
 *.txt
 !requiremnets.txt
+/netstalking_networks/

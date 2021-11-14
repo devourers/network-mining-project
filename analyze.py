@@ -2,6 +2,7 @@ import networkx as nx
 import vk
 import tqdm
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def construct_two_graphs(G, edge_list, node_list):
@@ -21,9 +22,11 @@ def construct_two_graphs(G, edge_list, node_list):
         without_hidden.remove_node(node)
     Gcc = sorted(nx.connected_components(without_hidden), key=len, reverse=True)
     G0 = G.subgraph(Gcc[0])
-    print("With hidden connected: ", nx.is_connected(with_hidden))
+    Gcc_2 = sorted(nx.connected_components(with_hidden), key=len, reverse=True)
+    G0_1 = G.subgraph(Gcc_2[0])
+    print("With hidden connected: ", nx.is_connected(G0_1))
     print("Without hidden connected: ", nx.is_connected(G0))
-    return with_hidden, G0
+    return G0_1, G0
 
 
 def get_main_info(G, graph_name, wo_hid=False):
@@ -88,8 +91,8 @@ def lambda_clusterization(G):
 def largest_cliques(G):
     cmap = plt.cm.rainbow
     cliques = [i for i in nx.find_cliques(G)]
-    print(cliques)
     max_size = len(max(cliques, key=len))
+    #print(max_size)
     colors = []
     widths = []
     i = 0

@@ -30,6 +30,16 @@ def count_netstalking_coef(vk_api, user1_id, user2_id, friends_sample_size, FoF_
     for l in tqdm.tqdm(range(repeat_counter)):
         G = construct_users_map(vk_api, user1_id, user2_id, friends_sample_size, FoF_sample_size, user1_friends, user2_friends)
         curr_score = find_closest_path(G, user1_id, user2_id)
+        '''
+        Drawing of generated networks
+        if (l == 0 or l == 3 ) and (friends_sample_size == 5 or friends_sample_size == 10 or friends_sample_size == 45) and curr_score != 0:
+            plt.figure()
+            plt.tight_layout()
+            #ll = nx.kamada_kawai_layout(G)
+            nx.draw(G)
+            plt.savefig("netstalking_networks/" + str(l) + ".jpg")
+            plt.close()
+        '''
         try:
             final_score += scores[curr_score]
         except:

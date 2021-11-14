@@ -5,6 +5,8 @@ import tqdm
 import random
 
 version = "5.81"
+random.seed(1337)
+
 
 def form_sample(size, init_sample, G=None):
     res = []

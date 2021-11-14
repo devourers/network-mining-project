@@ -4,7 +4,6 @@ import tqdm
 import connection
 import friends
 
-
 version = "5.81"
 
 def merge_graphs(G1, G2, logging = True):
@@ -91,5 +90,17 @@ def construct_graph(user1_id, user2_id, sample_size):
             edge_list.append(edge)
         elif edge[0] in hidden_friends or edge[1] in hidden_friends:
             edge_list.append(edge)
+    remove_myselves = []
+    for edge in G.edges():
+        if edge[0] == user1_id or edge[1] == user2_id or edge[1] == user1_id or edge[0] == user2_id:
+            remove_myselves.append(edge)
+            G.remove_edge(edge[0], edge[1])
+    for edge in remove_myselves:
+        try:
+            edge_list.remove(edge)
+        except:
+            continue
+    G.remove_node(user1_id)
+    G.remove_node(user2_id)
     return G, hidden_friends, edge_list
 
